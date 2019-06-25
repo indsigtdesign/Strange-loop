@@ -1,0 +1,105 @@
+<p>Arduino is : {{state}}</p>
+
+<script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+<script type="text/javascript">
+	  // Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyBusXNo18oKpHFdbZRo47gkw8ziWA_9kq0",
+		authDomain: "fusionloop.firebaseapp.com",
+		databaseURL: "https://fusionloop.firebaseio.com",
+		projectId: "fusionloop",
+		storageBucket: "fusionloop.appspot.com",
+		messagingSenderId: "582725448081"
+	};
+	firebase.initializeApp(config);
+
+	var m1 = firebase.database().ref("/fusionDB/pov/m1");
+	var m2 = firebase.database().ref("/fusionDB/pov/m2");
+	var m3 = firebase.database().ref("/fusionDB/pov/m3");
+    var m3 = firebase.database().ref("/fusionDB/pov/m3");
+
+    var dScreen = firebase.database().ref("/fusionDB/dScreen");
+
+    m1.on("child_changed",function(snapshot) {
+        if (snapshot.key == "pov1" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(0,150);
+        }
+
+        else if (snapshot.key == "pov2" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(150,300);
+        }
+
+        else if (snapshot.key == "pov3" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(300,450);
+        }
+
+        else sendData(999);
+    });
+
+    m2.on("child_changed",function(snapshot) {
+        if (snapshot.key == "pov1" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(450,600);
+        }
+
+        else if (snapshot.key == "pov2" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(600,750);
+        }
+
+        else if (snapshot.key == "pov3" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(900,1050);
+        }
+
+        else sendData(999);
+    });
+
+    m3.on("child_changed",function(snapshot) {
+        if (snapshot.key == "pov1" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(1050,1200);
+        }
+
+        else if (snapshot.key == "pov2" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(1200,1350);
+        }
+
+        else if (snapshot.key == "pov3" && snapshot.val() == 1) {
+        	sendData(99);
+        	sendData(1350,1500);
+        }
+
+        else sendData(999);
+    });
+
+    dScreen.on("child_changed",function(snapshot) {
+        //console.log(snapshot.key + " : " + snapshot.val());
+        var dataToSend = snapshot.val();
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+        xmlhttp.open("POST", "/");
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(JSON.stringify({dScreen:dataToSend}));
+    });
+
+	function sendData(pos1,pos2) {
+		if (pos2 == "undefined" || pos2 == undefined) {
+			var dataToSend = pos1.toString();
+			console.log(dataToSend);
+		} else {
+			pos1 = pos1.toString();
+			pos2 = pos2.toString();
+			var dataToSend = pos1 + "," + pos2;
+			console.log(dataToSend);
+		}
+		var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+		xmlhttp.open("POST", "/");
+		xmlhttp.setRequestHeader("Content-Type", "application/json");
+		xmlhttp.send(JSON.stringify({pov:dataToSend}));
+		
+	}
+</script>
